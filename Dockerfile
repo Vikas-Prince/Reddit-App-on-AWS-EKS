@@ -27,7 +27,7 @@ COPY --from=builder /reddit-app ./
 EXPOSE 3000
 
 # start the application
-CMD ["npm" "start"]
+CMD ["npm", "start"]
 
 
 
