@@ -4,6 +4,8 @@
 
 [Reddit](https://www.reddit.com/) is a social news aggregation, web content rating, and discussion website. Users can submit content, such as text, links, and images, and participate in discussions through comments. This repository contains a clone of Reddit, designed to provide a similar experience with additional features and improvements.
 
+The Reddit clone has been developed using **Next.js**, a popular React framework known for its server-side rendering and static site generation capabilities, which ensures high performance and SEO optimization.
+
 ## Project Description
 
 This repository contains the infrastructure and CI/CD pipeline setup for deploying a **Reddit Clone Application** on an **Amazon EKS (Elastic Kubernetes Service) cluster** with Continuous Integration (CI) and Continuous Deployment (CD) pipelines managed through Jenkins and ArgoCD. The following outlines the infrastructure and processes involved:
