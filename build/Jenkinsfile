@@ -1,0 +1,117 @@
+pipeline{
+    agent {
+        label 'slave'
+    }
+
+    tools{
+        jdk 'jdk17'
+        docker 'docker'
+    }
+
+    environtments{
+        SONAR_HOME = tool 'sonar-scanner'
+    }
+
+    stages{
+
+        stage('Cleanup the workspace'){
+            steps{
+                script{
+                    cleanWs()
+                }
+            }   
+        }
+
+        stage('Checkout SCM'){
+            steps{
+                git branch: 'main', url: 'https://github.com/Vikas-Prince/Reddit-App-on-AWS-EKS.git'
+                echo "Code downloaded successfully"
+            }
+        }
+
+        stage('lint checks'){
+            steps{
+                sh 'npm run lint'
+            }
+        }
+
+        stage('Scanning File System for Vulnerabilties'){
+            steps{
+                sh 'tivy fs --format json -o trvy-fs-report.json .'
+                echo "Image scanned Succesfuly"
+            }
+        }
+
+        stage('Checking Code Quality'){
+            steps{
+                script{
+                    withSonarQubeEnv('sonar-scanner') {
+                        // some block
+                         sh '''
+                            $SONAR_HOME/bin/sonar-scanner
+                            -Dsonar.projectName=reddit-clone-scan
+                            -Dsonar.projectKey=reddit-clone-scan
+                            -Dsonar.sources=. \
+                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                            '''
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate'){
+            steps{
+                script{
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                }
+            }
+        }
+
+        stage('Build Docker image'){
+            steps{
+                withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                    sh 'docker build -t vikasprince/reddit-clone:latest .'
+                } 
+            }
+        }
+
+        stage('Trivy Image scan'){
+            steps{
+                sh 'trivy image --format json -o trivy-image-report.json vikasprince/reddit-clone'
+                }
+            }
+
+        stage('push Docker image'){
+            steps{
+                withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                    sh 'docker push vikasprince/reddit-clone:latest'
+                } 
+            }
+        }
+    }
+
+    post{
+        always{
+            script{
+                emailext(
+                    subject: "Reddit App Continous Integration"
+                    body: """
+                        Hello Team
+
+                        The build for job '${env.JOB_NAME}' has completed!
+
+                        Build Details:
+                        - Build Number: '${env.BUILD_NUMBER}'
+                        - Build Status: '${currentBuild.currentResult}
+                        - Build URL: '${env.BUILD_URL}'
+
+                        Thanks,
+                        Jenkins
+                    """
+                    attachmentsPattern: 'trivy*.json'
+                    to: 'example@gmail.com'
+                )
+            }
+        }
+    }
+}
