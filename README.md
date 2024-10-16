@@ -17,27 +17,35 @@ We are setting up the following infrastructure to support the CI/CD pipeline and
 - **4 EC2 instances**:
 
   - **Jenkins**: For CI/CD pipeline execution.
-  - **SonarQube**: For static code analysis.
-  - **Prometheus & Grafana**: For monitoring Kubernetes cluster and application health.
-  - **ArgoCD**: For managing Kubernetes deployments and GitOps workflow.
+    - Install Trivy on Jenkins slave
+
+```bash
+rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.41.0/trivy_0.41.0_Linux-64bit.rpm
+```
+
+- **SonarQube**: For static code analysis.
+- **Prometheus & Grafana**: For monitoring Kubernetes cluster and application health.
+- **ArgoCD**: For managing Kubernetes deployments and GitOps workflow.
 
 - **Amazon EKS Cluster**: Hosting the application in a Kubernetes cluster.
 - **IAM Roles and Permissions**:
   - Jenkins needs specific roles to interact with AWS services like EKS and S3.
-
----
 
 ## Jenkins CI/CD Pipeline
 
 ### 1. Jenkins Setup
 
 **Prerequisites**:
-- Install Jenkins with required plugins: 
-  - **Eclipse ECJ** for installing JDK
-  - **Docker** for building and pushing container images
+
+- Install Jenkins with required plugins:
+  - **Eclipse Temurin installer:** Provides an installer for the JDK tool that downloads the JDK from https://adoptium.net
+  - **SonarQubeScanner:** This plugin allows an easy integration of SonarQube, the open source platform for Continuous Inspection of code quality.
+  - **Sonar Quality Gates:** Fails the build whenever the Quality Gates criteria in the Sonar 5.6+ analysis aren't met (the project Quality Gates status is different than "Passed"
+  - **Docker, Docker commons, Docker pipeline** for building and pushing container images
   - **Kubernetes** plugin for deploying on EKS
 
 **Tools**:
+
 - Jenkins is configured with all necessary tools like JDK, Docker, Kubernetes CLI, and more.
 
 ### 2. CI Pipeline Stages
@@ -60,9 +68,7 @@ Post-execution stages include:
 
 - **Success/Failure Notifications**: Sends an email notification to the recipient with the pipeline result, along with Trivy security reports and build details.
 
----
-
-## CD Pipeline with ArgoCD
+### 3. CD Pipeline with ArgoCD
 
 The CD (Continuous Deployment) process is handled by **ArgoCD**, which ensures automatic deployment to the Kubernetes cluster based on the latest Kubernetes manifests.
 
