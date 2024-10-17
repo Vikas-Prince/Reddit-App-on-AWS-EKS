@@ -72,7 +72,7 @@ Post-execution stages include:
 
 The CD (Continuous Deployment) process is handled by **ArgoCD**, which ensures automatic deployment to the Kubernetes cluster based on the latest Kubernetes manifests.
 
-1. **Kubernetes Manifest Files**: The repository contains all the necessary Kubernetes manifest files required for deploying the Reddit clone application. These are stored in a separate Git repo for efficient management.
+1. **Kubernetes Manifest Files**: The repository contains all the necessary Kubernetes manifest files required for deploying the Reddit clone application. These are stored in a separate Git repo for efficient management. For the Kubernetes manifest and ArgoCD configuration, refer to the [reddit-app-ArgoCD](https://github.com/Vikas-Prince/reddit-app-gitops.git) repository.
 2. **ArgoCD Integration**: Automatically applies the Kubernetes manifests, keeping the application and infrastructure in sync with Git.
 
 ---
