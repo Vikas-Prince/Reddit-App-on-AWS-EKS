@@ -10,6 +10,12 @@ The Reddit clone has been developed using **Next.js**, a popular React framework
 
 This repository contains the infrastructure and CI/CD pipeline setup for deploying a **Reddit Clone Application** on an **Amazon EKS (Elastic Kubernetes Service) cluster** with Continuous Integration (CI) and Continuous Deployment (CD) pipelines managed through Jenkins and ArgoCD. The following outlines the infrastructure and processes involved:
 
+### Architecture Overview
+
+The architecture is designed to provide a seamless workflow for development, deployment, and scaling. Here’s a high-level representation of the project workflow:
+
+![Architecture](snapshots/architecture.png)
+
 ### Infrastructure Setup
 
 We are setting up the following infrastructure to support the CI/CD pipeline and monitoring tools:
