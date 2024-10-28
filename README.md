@@ -63,7 +63,9 @@ The Jenkins pipeline for this project is divided into multiple stages to ensure 
 3. **Lint Checks**: Performs linting to maintain code quality.
 4. **File System Scanning (Trivy)**: Scans the workspace for security vulnerabilities and exports the report in JSON format.
 5. **Code Quality Check (SonarQube)**: Executes SonarScanner to analyze the code quality.
+
    ![SonarQube Check](snapshots/sonar.png)
+
 6. **Sonar Quality Gate**: Checks if the code meets the quality gate threshold.
 7. **Build Docker Image**: Uses a pre-defined multi-stage `Dockerfile` to build the application.
 8. **Docker Image Scanning (Trivy)**: Scans the Docker image for vulnerabilities and saves the report.
@@ -87,6 +89,7 @@ The CD (Continuous Deployment) process is handled by **ArgoCD**, which ensures a
 
 1. **Kubernetes Manifest Files**: The repository contains all the necessary Kubernetes manifest files required for deploying the Reddit clone application. These are stored in a separate Git repo for efficient management. For the Kubernetes manifest and ArgoCD configuration, refer to the [reddit-app-ArgoCD](https://github.com/Vikas-Prince/reddit-app-gitops.git) repository.
 2. **ArgoCD Integration**: Automatically applies the Kubernetes manifests, keeping the application and infrastructure in sync with Git.
+
    ![ArgoCD](snapshots/argoCD.png)
 
 ### 4. Monitoring Setup (Prometheus & Grafana)
